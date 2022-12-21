@@ -16,7 +16,7 @@ const babelLoaderConfiguration = {
   include: [
     path.resolve(rootDirectory, 'index.web.js'), // Entry to your application
     path.resolve(coreDirectory, 'App.tsx'), // Change this to your main App file
-    path.resolve(rootDirectory, 'src'),
+    path.resolve(coreDirectory),
     path.resolve(rootDirectory, 'component'),
     ...compileNodeModules,
   ],
