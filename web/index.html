@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Testing React Native on the Web!</title>
+    <meta content="initial-scale=1,width=device-width" name="viewport" />
+    <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
+    <style>
+      /* These styles make the body full-height */
+      html,
+      body,
+      #root {
+        height: 100%;
+      }
+      /* These styles disable body scrolling if you are using <ScrollView> */
+      body {
+        overflow: hidden;
+      }
+      /* These styles make the root element flex and column wise filling */
+      #root {
+        display: flex;
+        flex-direction: column;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="react-native-web-app"></div>
+    <script type="text/javascript" src="/bundle.web.js"></script>
+  </body>
+</html>
