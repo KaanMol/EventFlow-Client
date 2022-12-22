@@ -9,13 +9,13 @@ const Navigation = () => {
   return (
     <>
       <Link to="/">
-        <Text style={{fontSize: 18}}>Home</Text>
+        <Text>Home</Text>
       </Link>
       <Link to="/sources">
-        <Text style={{fontSize: 18}}>Sources</Text>
+        <Text>Sources</Text>
       </Link>
       <Link to="/test">
-        <Text style={{fontSize: 18}}>Test</Text>
+        <Text>Test</Text>
       </Link>
     </>
   );

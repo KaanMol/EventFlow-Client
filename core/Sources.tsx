@@ -1,7 +1,8 @@
 import {Button, Text, TextInput, View} from 'react-native';
-import {useRecoilValue} from 'recoil';
+import {useRecoilState, useRecoilValue, useSetRecoilState} from 'recoil';
 import {sourceSelector} from './store/source';
 import {useForm, SubmitHandler, Controller, Control} from 'react-hook-form';
+import axios from 'axios';
 
 type SourceInput = {
   name: string;
@@ -39,13 +40,31 @@ export function Sources() {
     control,
     handleSubmit,
     formState: {errors},
+    reset,
   } = useForm<SourceInput>({
     defaultValues: {
       name: '',
       url: '',
     },
   });
-  const onSubmit: SubmitHandler<SourceInput> = data => console.log(data);
+
+  const [value, setSource] = useRecoilState(sourceSelector);
+
+  const onSubmit: SubmitHandler<SourceInput> = async data => {
+    const body = {
+      ...data,
+      user_id: '63a34fb4fc5260fc608087a9',
+    };
+
+    let response = await axios.post('http://localhost:3000/sources', body);
+
+    setSource([...value, body]);
+
+    reset({
+      name: '',
+      url: '',
+    });
+  };
 
   const sourceList = useRecoilValue(sourceSelector);
   return (

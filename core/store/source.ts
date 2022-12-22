@@ -19,5 +19,9 @@ export const sourceSelector = selector({
         const source = get(sourceAtom);
 
         return source;
+    },
+    set: ({ set }, newValue) => {
+        console.log(newValue)
+        set(sourceAtom, newValue);
     }
 });
