@@ -5,6 +5,22 @@ import {RecoilRoot} from 'recoil';
 import {Link, Route, Router, Routes} from './Router';
 import {Sources} from './Sources';
 
+const Navigation = () => {
+  return (
+    <>
+      <Link to="/">
+        <Text style={{fontSize: 18}}>Home</Text>
+      </Link>
+      <Link to="/sources">
+        <Text style={{fontSize: 18}}>Sources</Text>
+      </Link>
+      <Link to="/test">
+        <Text style={{fontSize: 18}}>Test</Text>
+      </Link>
+    </>
+  );
+};
+
 const Home = () => {
   return (
     <>
@@ -12,12 +28,7 @@ const Home = () => {
         <StatusBar barStyle="dark-content" />
         <View style={{alignItems: 'center'}}>
           <Text style={{fontSize: 24}}>React Native Web App Example</Text>
-          <React.Suspense fallback={<Text>Loading...</Text>}>
-            <Sources />
-          </React.Suspense>
-          <Link to="/test">
-            <Text>Go to Test</Text>
-          </Link>
+          <Navigation />
         </View>
       </SafeAreaView>
     </>
@@ -31,9 +42,24 @@ const Test = () => {
         <StatusBar barStyle="dark-content" />
         <View style={{alignItems: 'center'}}>
           <Text style={{fontSize: 24}}>Test</Text>
-          <Link to="/">
-            <Text>Go to Home</Text>
-          </Link>
+          <Navigation />
+        </View>
+      </SafeAreaView>
+    </>
+  );
+};
+
+const SourcePage = () => {
+  return (
+    <>
+      <SafeAreaView>
+        <StatusBar barStyle="dark-content" />
+        <View style={{alignItems: 'center'}}>
+          <Text style={{fontSize: 24}}>Event sources</Text>
+          <React.Suspense fallback={<Text>Loading...</Text>}>
+            <Sources />
+          </React.Suspense>
+          <Navigation />
         </View>
       </SafeAreaView>
     </>
@@ -47,6 +73,7 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/test" element={<Test />} />
+          <Route path="/sources" element={<SourcePage />} />
         </Routes>
       </Router>
     </RecoilRoot>
