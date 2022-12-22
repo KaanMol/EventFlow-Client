@@ -1,14 +1,14 @@
 import axios from "axios";
 import { atom, selector } from "recoil";
+import { request } from "../common/request";
 
 const sourceAtom = atom({
     key: 'source',
     default: selector({
         key: 'sourceLoader',
         get: async () => {
-            let data = await fetch("http://localhost:3000/users/63a34fb4fc5260fc608087a9");
-            return (await data.json()).data.sources;
-            return await (await axios.get("http://localhost:3000/users/63a34fb4fc5260fc608087a9")).data.data.sources;
+            let data = await request.get("/users/63a34fb4fc5260fc608087a9");
+            return data.data.data.sources;
         },
     }),
 });

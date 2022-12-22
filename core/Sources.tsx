@@ -3,6 +3,7 @@ import {useRecoilState, useRecoilValue, useSetRecoilState} from 'recoil';
 import {sourceSelector} from './store/source';
 import {useForm, SubmitHandler, Controller, Control} from 'react-hook-form';
 import axios from 'axios';
+import {request} from './common/request';
 
 type SourceInput = {
   name: string;
@@ -24,6 +25,7 @@ const Input = ({
       }}
       render={({field: {onChange, onBlur, value}}) => (
         <TextInput
+          style={{height: 40, borderColor: 'gray', borderWidth: 1}}
           onBlur={onBlur}
           onChangeText={onChange}
           placeholder={name}
@@ -56,7 +58,7 @@ export function Sources() {
       user_id: '63a34fb4fc5260fc608087a9',
     };
 
-    let response = await axios.post('http://localhost:3000/sources', body);
+    let response = await request.post('/sources', body);
 
     setSource([...value, body]);
 
@@ -69,8 +71,8 @@ export function Sources() {
   const sourceList = useRecoilValue(sourceSelector);
   return (
     <View>
-      {sourceList.map((source: {url: string; name: string}) => (
-        <Text>
+      {sourceList.map((source: {url: string; name: string}, index: number) => (
+        <Text key={source.name + index}>
           sourceName: {source.name}, sourceURL: {source.url}
         </Text>
       ))}
