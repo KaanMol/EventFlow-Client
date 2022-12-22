@@ -17,6 +17,8 @@
     "react-dom": "^18.2.0",
     "react-native": "0.70.6",
     "react-native-web": "^0.18.10",
+    "react-router-dom": "^6.6.0",
+    "react-router-native": "^6.6.0",
     "recoil": "^0.7.6",
     "run": "^1.4.0",
     "web": "^0.0.2"
