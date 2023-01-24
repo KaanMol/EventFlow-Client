@@ -1,6 +1,15 @@
-import React, { useCallback, useState } from 'react';
-import {SafeAreaView, StatusBar, Text, View, Button, Alert} from 'react-native';
-import { authorize, prefetchConfiguration } from 'react-native-app-auth';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, {useCallback, useState} from 'react';
+import {
+  SafeAreaView,
+  StatusBar,
+  Text,
+  View,
+  Button,
+  Alert,
+  Linking,
+} from 'react-native';
+import {InAppBrowser} from 'react-native-inappbrowser-reborn';
 
 import {RecoilRoot} from 'recoil';
 import {Link, Route, Router, Routes} from './Router';
@@ -67,71 +76,107 @@ const SourcePage = () => {
   );
 };
 
-const defaultState = {
-    hasLoggedInOnce: false,
-    accessToken: "",
-    accessTokenExpirationDate: "",
-    refreshToken: ""
-}
-
 const config = {
-    clientId: '6975558cf8663dde5c7c534a4241c0bda09e8b8f',
-    redirectUrl: 'io.identityserver.demo:/oauthredirect',
-    scopes: ['profile'],
-    dangerouslyAllowInsecureHttpRequests: true,
-    responseType: 'code',
-
-    serviceConfiguration: {
-      authorizationEndpoint: 'https://identity.goud.host/application/o/authorize',
-      tokenEndpoint: 'https://identity.goud.host/application/o/token',
-    }
-}
+  // I am aware the ClientID is in here, however, the app is not confidential and the ID will change soon.
+  // trunk-ignore(gitleaks/generic-api-key)
+  clientId: '6975558cf8663dde5c7c534a4241c0bda09e8b8f',
+  redirectUrl: 'my-demo://',
+  scopes: ['profile'],
+  authorizationEndpoint: 'https://identity.goud.host/application/o/authorize',
+  tokenEndpoint: 'https://identity.goud.host/application/o/token',
+};
 
 const App = () => {
-    // React.useEffect(() => {
-    //     prefetchConfiguration({
-    //       warmAndPrefetchChrome: true,
-    //       connectionTimeoutSeconds: 5,
-    //       ...config,
-    //     });
+  // React.useEffect(() => {
+  //     prefetchConfiguration({
+  //       warmAndPrefetchChrome: true,
+  //       connectionTimeoutSeconds: 5,
+  //       ...config,
+  //     });
 
-    //   }, []);
+  //   }, []);
 
-    const [state, setState] = useState(defaultState);
+  function makeid(length: number) {
+    var result = '';
+    var characters =
+      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
 
-    const handleAuthorize = useCallback(
-        async () => {
-          try {
-            const newAuthState = await authorize({
-              ...config,
-              connectionTimeoutSeconds: 5
-            });
+    for (var i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+  }
+  const test = async () => {
+    try {
+      const codeVerifier = makeid(128);
+      const authState = makeid(30);
+      const url = `${config.authorizationEndpoint}?client_id=${
+        config.clientId
+      }&redirect_uri=${
+        config.redirectUrl
+      }&response_type=code&scope=${config.scopes.join(' ')}&state=${makeid(
+        30,
+      )}&code_challenge_method=S256`;
 
-            console.log(newAuthState)
-    
-            setState({
-              hasLoggedInOnce: true,
-              provider: "identityserver",
-              ...(newAuthState as any),
-            });
-          } catch (error) {
-            console.log(error)
-            // Alert.alert('Failed to log in', (error as any).message);
-          }
-        },
-        [state],
-      );
-    return (
-        <>
-          <SafeAreaView>
-            <StatusBar barStyle="dark-content" />
-            <View style={{alignItems: 'center'}}>
-              <Text style={{fontSize: 24}}>Test</Text>
-              <Button title="hi" onPress={handleAuthorize} />
-              {/* <Navigation /> */}
-            </View>
-          </SafeAreaView>
-        </>
-      );
+      await AsyncStorage.setItem('codeVerifier', codeVerifier || '');
+      await AsyncStorage.setItem('authState', authState || '');
+
+      if (await InAppBrowser.isAvailable()) {
+        const result = await InAppBrowser.openAuth(url, 'my-demo://', {
+          // iOS Properties
+          dismissButtonStyle: 'cancel',
+          preferredBarTintColor: '#453AA4',
+          preferredControlTintColor: 'white',
+          readerMode: false,
+          animated: true,
+          modalPresentationStyle: 'fullScreen',
+          modalTransitionStyle: 'coverVertical',
+          modalEnabled: true,
+          enableBarCollapsing: false,
+          ephemeralWebSession: false,
+          // Android Properties
+          showTitle: true,
+          toolbarColor: '#6200EE',
+          secondaryToolbarColor: 'black',
+          navigationBarColor: 'black',
+          navigationBarDividerColor: 'white',
+          enableUrlBarHiding: true,
+          enableDefaultShare: true,
+          forceCloseOnRedirection: false,
+          // Specify full animation resource identifier(package:anim/name)
+          // or only resource name(in case of animation bundled with app).
+          animations: {
+            startEnter: 'slide_in_right',
+            startExit: 'slide_out_left',
+            endEnter: 'slide_in_left',
+            endExit: 'slide_out_right',
+          },
+          headers: {
+            'my-custom-header': 'my custom header value',
+          },
+        });
+
+        Alert.alert(JSON.stringify(result));
+      } else {
+        Linking.openURL(url);
+      }
+    } catch (error) {
+      Alert.alert((error as any).message);
+    }
+  };
+
+  return (
+    <>
+      <SafeAreaView>
+        <StatusBar barStyle="dark-content" />
+        <View style={{alignItems: 'center'}}>
+          <Text style={{fontSize: 24}}>Test</Text>
+          <Button title="Open InAppBrowser" onPress={test} />
+          {/* <Navigation /> */}
+        </View>
+      </SafeAreaView>
+    </>
+  );
 };
 export default App;
