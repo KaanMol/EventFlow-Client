@@ -80,7 +80,7 @@ const config = {
   // I am aware the ClientID is in here, however, the app is not confidential and the ID will change soon.
   // trunk-ignore(gitleaks/generic-api-key)
   clientId: '6975558cf8663dde5c7c534a4241c0bda09e8b8f',
-  redirectUrl: 'my-demo://',
+  redirectUrl: 'my-demo://demo/',
   scopes: ['profile'],
   authorizationEndpoint: 'https://identity.goud.host/application/o/authorize',
   tokenEndpoint: 'https://identity.goud.host/application/o/token',
@@ -123,7 +123,7 @@ const App = () => {
       await AsyncStorage.setItem('authState', authState || '');
 
       if (await InAppBrowser.isAvailable()) {
-        const result = await InAppBrowser.openAuth(url, 'my-demo://', {
+        const result = await InAppBrowser.openAuth(url, 'my-demo://demo/', {
           // iOS Properties
           dismissButtonStyle: 'cancel',
           preferredBarTintColor: '#453AA4',
