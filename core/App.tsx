@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 import React, {useCallback, useState} from 'react';
 import {
   SafeAreaView,
@@ -10,10 +11,12 @@ import {
   Linking,
 } from 'react-native';
 import {InAppBrowser} from 'react-native-inappbrowser-reborn';
-
 import {RecoilRoot} from 'recoil';
 import {Link, Route, Router, Routes} from './Router';
 import {Sources} from './Sources';
+import qs from 'qs';
+import randomString from 'random-string';
+import Hashes from 'jshashes';
 
 const Navigation = () => {
   return (
@@ -83,7 +86,7 @@ const config = {
   redirectUrl: 'my-demo://demo/',
   scopes: ['profile'],
   authorizationEndpoint: 'https://identity.goud.host/application/o/authorize',
-  tokenEndpoint: 'https://identity.goud.host/application/o/token',
+  tokenEndpoint: 'https://identity.goud.host/application/o/token/',
 };
 
 const App = () => {
@@ -109,7 +112,12 @@ const App = () => {
   }
   const test = async () => {
     try {
-      const codeVerifier = makeid(128);
+        
+
+        const code_verifier = randomString({length: 40});
+        const code_challenge = new Hashes.SHA256().b64(code_verifier)
+        .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+/g, '')
+
       const authState = makeid(30);
       const url = `${config.authorizationEndpoint}?client_id=${
         config.clientId
@@ -117,9 +125,9 @@ const App = () => {
         config.redirectUrl
       }&response_type=code&scope=${config.scopes.join(' ')}&state=${makeid(
         30,
-      )}&code_challenge_method=S256`;
+      )}&code_challenge_method=S256&code_challenge=${code_challenge}`;
 
-      await AsyncStorage.setItem('codeVerifier', codeVerifier || '');
+      await AsyncStorage.setItem('codeVerifier', code_challenge || '');
       await AsyncStorage.setItem('authState', authState || '');
 
       if (await InAppBrowser.isAvailable()) {
@@ -156,12 +164,21 @@ const App = () => {
             'my-custom-header': 'my custom header value',
           },
         });
-
-        Alert.alert(JSON.stringify(result));
+        
+        const code = (result as any).url.substring(21, 53);
+        const params = new URLSearchParams();
+        params.append("grant_type", 'authorization_code');
+        params.append("client_id", config.clientId);
+        params.append("code_verifier", code_verifier);
+        params.append("code", code);
+        params.append("redirect_uri", 'my-demo://demo/');
+        const res = await axios.post(config.tokenEndpoint, params.toString());
+        console.log(res.data)
       } else {
         Linking.openURL(url);
       }
     } catch (error) {
+        console.log((error as any).response.data)
       Alert.alert((error as any).message);
     }
   };
