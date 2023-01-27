@@ -1,4 +1,4 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import EncryptedStorage from 'react-native-encrypted-storage';
 import axios from "axios";
 import Hashes from "jshashes";
 import randomString from "random-string";
@@ -18,9 +18,6 @@ export function Login() {
             const url = `${authConfig.authorizationEndpoint}?client_id=${authConfig.clientId
                 }&redirect_uri=${authConfig.redirectUrl
                 }&response_type=code&scope=${authConfig.scopes.join(' ')}&state=${authState}&code_challenge_method=S256&code_challenge=${codeChallenge}`;
-
-            await AsyncStorage.setItem('codeVerifier', codeChallenge || '');
-            await AsyncStorage.setItem('authState', authState || '');
 
             if (await InAppBrowser.isAvailable()) {
                 const result = await InAppBrowser.openAuth(url, 'my-demo://demo/', {
@@ -61,8 +58,17 @@ export function Login() {
                 params.append("code_verifier", codeVerifier);
                 params.append("code", code);
                 params.append("redirect_uri", 'my-demo://demo/');
+
                 const res = await axios.post(authConfig.tokenEndpoint, params.toString());
-                console.log(res.data)
+                await EncryptedStorage.setItem(
+                    "access_token",
+                    res.data.access_token
+                );
+
+                await EncryptedStorage.setItem(
+                    "refresh_token",
+                    res.data.refresh_token
+                );
             } else {
                 Linking.openURL(url);
             }

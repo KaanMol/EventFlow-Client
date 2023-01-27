@@ -3,7 +3,7 @@ import { Index } from './pages/Index';
 import { Login } from './pages/Login';
 
 const App = () => {
-	const loggedIn = true;
+	const loggedIn = false;
 
 	return loggedIn ? <Index /> : <Login />
 };
