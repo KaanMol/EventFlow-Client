@@ -3,6 +3,7 @@ import { Text } from 'react-native';
 import { RecoilRoot, useRecoilState } from 'recoil';
 import { Index } from './pages/Index';
 import { Login } from './pages/Login';
+import { Route, Router, Routes } from './Router';
 import { tokenState } from './store/token';
 
 function Calendar() {
@@ -12,17 +13,26 @@ function Calendar() {
 	return (
 		<>
 			{(token as string)?.length ? (
-				<Index
-					logout={() => {
-						setToken('');
-					}}
-				/>
+				<>
+
+					<Index
+						logout={() => {
+							setToken('');
+						}}
+					/>
+				</>
 			) : (
-				<Login
-					setLogin={_token => {
-						setToken(_token);
-					}}
-				/>
+				<>
+					<Router>
+						<Routes>
+							<Route path='/' element={<Login
+								setLogin={_token => {
+									setToken(_token);
+								}}
+							/>} />
+						</Routes>
+					</Router>
+				</>
 			)}
 		</>
 	);
