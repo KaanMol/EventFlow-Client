@@ -1,0 +1,1 @@
+export { default as Storage } from '@react-native-async-storage/async-storage';
