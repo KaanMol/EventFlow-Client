@@ -23,15 +23,13 @@ function Calendar() {
 				</>
 			) : (
 				<>
-					<Router>
-						<Routes>
-							<Route path='/' element={<Login
-								setLogin={_token => {
-									setToken(_token);
-								}}
-							/>} />
-						</Routes>
-					</Router>
+					<Routes>
+						<Route path='/' element={<Login
+							setLogin={_token => {
+								setToken(_token);
+							}}
+						/>} />
+					</Routes>
 				</>
 			)}
 		</>
@@ -41,9 +39,11 @@ function Calendar() {
 const App = () => {
 	return (
 		<RecoilRoot>
-			<React.Suspense fallback={<Text>Loading...</Text>}>
-				<Calendar />
-			</React.Suspense>
+			<Router>
+				<React.Suspense fallback={<Text>Loading...</Text>}>
+					<Calendar />
+				</React.Suspense>
+			</Router>
 		</RecoilRoot>
 	);
 };

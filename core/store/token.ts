@@ -1,6 +1,5 @@
 import axios from "axios";
 import { atom, selector } from "recoil";
-import { request } from "../common/request";
 import { Storage } from "../common/storage.web";
 
 const tokenAtom = atom({
@@ -8,7 +7,7 @@ const tokenAtom = atom({
 	default: selector({
 		key: 'sourceLoader',
 		get: async () => {
-			return await Storage.getItem('access_token');
+			return await Storage.getItem('auth.access_token');
 		}
 	}),
 });
@@ -20,7 +19,7 @@ export const tokenState = selector({
 		if (token === null) { return null; } else { return token; }
 	},
 	set: ({ set }, newValue) => {
-		Storage.setItem('access_token', newValue === null ? '' : newValue.toString());
+		Storage.setItem('auth.access_token', newValue === null ? '' : newValue.toString());
 		return set(tokenAtom, newValue);
 	}
 });

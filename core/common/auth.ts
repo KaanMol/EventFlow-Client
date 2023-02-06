@@ -1,12 +1,22 @@
 import { Linking } from 'react-native';
 import InAppBrowser from 'react-native-inappbrowser-reborn';
+import auth from '../config/auth';
+import { fetchAccessToken, generateAuthPrerequisites } from './token';
 
-export async function startAuth(url: string) {
+export async function startAuthFlow() {
+	const { url } = await generateAuthPrerequisites();
+	const result = await startInAppBrowser(url);
+	return await fetchAccessToken((result as any).url.substring(21, 53))
+};
+
+async function startInAppBrowser(url: string) {
+	console.log(await InAppBrowser.isAvailable())
 	if (await InAppBrowser.isAvailable() === false) {
-		Linking.openURL(url);
+
+		return Linking.openURL(url);
 	}
 
-	return await InAppBrowser.openAuth(url, 'my-demo://demo/', {
+	return await InAppBrowser.openAuth(url, auth.redirectUrl, {
 		// iOS Properties
 		dismissButtonStyle: 'cancel',
 		preferredBarTintColor: '#453AA4',
