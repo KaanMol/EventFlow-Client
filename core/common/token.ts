@@ -26,6 +26,7 @@ export async function fetchAccessToken(code: string) {
 
 	await Storage.setItem('auth.access_token', res.data.access_token);
 	await Storage.setItem('auth.refresh_token', res.data.refresh_token);
+
 	return res.data.access_token;
 }
 

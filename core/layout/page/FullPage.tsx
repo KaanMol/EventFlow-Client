@@ -1,5 +1,5 @@
 import React from "react";
-import { SafeAreaView, StatusBar, Text, View } from "react-native";
+import { SafeAreaView, View } from "react-native";
 
 export function FullPageLayout(props: { children: JSX.Element[] | JSX.Element }) {
 	return (
