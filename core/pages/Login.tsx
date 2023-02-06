@@ -18,7 +18,7 @@ function LoggingIn() {
 }
 
 export function Login() {
-	const [loggingIn, setLoggingIn] = useState(false);
+	const [authFlowState, setAuthFlowState] = useState(false);
 	let [searchParams] = useSearchParams();
 	const navigate = useNavigate();
 	const dispatch = useAppDispatch();
@@ -26,29 +26,26 @@ export function Login() {
 	useEffect(() => {
 		const code = searchParams.get("code");
 		if (code !== null) {
-			setLoggingIn(true)
+			setAuthFlowState(true)
 			dispatch(asyncFetchAccessToken(code)).then(() => {
 				navigate("/");
 			})
 		}
-	}, [searchParams])
+	}, [searchParams, dispatch, navigate])
 
 
 	return (
 		<FullPageLayout>
 			<View style={{ alignItems: 'center' }}>
-				{loggingIn === true ?
+				{authFlowState ?
 					<LoggingIn /> :
 					<>
 						<Text style={{ fontSize: 24 }}>
 							Are you ready to plan your next adventure?
 						</Text>
 						<Button title="Login" onPress={async () => {
-							// setLoggingIn(true);
+							setAuthFlowState(true)
 							await startAuthFlow(navigate)
-							// navigate.
-							// location.search = "?code=123"
-							// redirect("/hi")
 						}} />
 					</>
 				}
