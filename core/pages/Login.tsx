@@ -1,10 +1,10 @@
 
-import { ActivityIndicator, Button, Platform, Text, View } from 'react-native';
+import { ActivityIndicator, Button, Text, View } from 'react-native';
 import { FullPageLayout } from '../layout/page/FullPage';
 import { useEffect, useState } from 'react';
 import { startAuthFlow } from '../common/auth';
-import { useSearchParams } from '../Router';
-import { fetchAccessToken } from '../common/token';
+import { useSearchParams, useNavigate } from '../common/router';
+import { asyncFetchAccessToken, useAppDispatch } from '../store';
 
 function LoggingIn() {
 	return <>
@@ -16,21 +16,21 @@ function LoggingIn() {
 
 }
 
-export function Login(props: { setLogin: (token: string) => void }) {
+export function Login() {
 	const [loggingIn, setLoggingIn] = useState(false);
-	let [searchParams, setSearchParams] = useSearchParams();
+	let [searchParams] = useSearchParams();
+	const navigate = useNavigate();
+	const dispatch = useAppDispatch();
 
 	useEffect(() => {
-		if (Platform.OS === "web") {
-			const code = searchParams.get("code");
-			if (code !== null) {
-				setLoggingIn(true)
-				fetchAccessToken(code).then(accessToken => {
-					props.setLogin(accessToken)
-				}).catch(console.error);
-			}
+		const code = searchParams.get("code");
+		if (code !== null) {
+			setLoggingIn(true)
+			dispatch(asyncFetchAccessToken(code)).then(() => {
+				navigate("/");
+			})
 		}
-	}, [])
+	}, [searchParams])
 
 
 	return (
@@ -43,8 +43,11 @@ export function Login(props: { setLogin: (token: string) => void }) {
 							Are you ready to plan your next adventure?
 						</Text>
 						<Button title="Login" onPress={async () => {
-							setLoggingIn(true);
-							props.setLogin(await startAuthFlow())
+							// setLoggingIn(true);
+							await startAuthFlow(navigate)
+							// navigate.
+							// location.search = "?code=123"
+							// redirect("/hi")
 						}} />
 					</>
 				}
