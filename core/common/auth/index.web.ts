@@ -1,5 +1,5 @@
-import { Storage } from "./storage";
-import { generateAuthPrerequisites } from "./token";
+import { Storage } from "../storage";
+import { generateAuthPrerequisites } from "../token";
 
 export async function startAuthFlow() {
 	const { codeVerifier, url } = await generateAuthPrerequisites();

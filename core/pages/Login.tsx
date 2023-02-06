@@ -4,7 +4,8 @@ import { FullPageLayout } from '../layout/page/FullPage';
 import { useEffect, useState } from 'react';
 import { startAuthFlow } from '../common/auth';
 import { useSearchParams, useNavigate } from '../common/router';
-import { asyncFetchAccessToken, useAppDispatch } from '../store';
+import { useAppDispatch } from '../store';
+import { asyncFetchAccessToken } from '../store/auth/authSlice';
 
 function LoggingIn() {
 	return <>

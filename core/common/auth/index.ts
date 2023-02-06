@@ -1,8 +1,8 @@
 import { Linking } from 'react-native';
 import InAppBrowser from 'react-native-inappbrowser-reborn';
 import { NavigateFunction } from 'react-router-dom';
-import auth from '../config/auth';
-import { generateAuthPrerequisites } from './token';
+import auth from '../../config/auth';
+import { generateAuthPrerequisites } from '../token';
 
 export async function startAuthFlow(navigate: NavigateFunction) {
 	const { url } = await generateAuthPrerequisites();

@@ -4,7 +4,8 @@ import { Index } from './pages/Index';
 import { Login } from './pages/Login';
 import { Route, Router, Routes } from './common/router';
 import { Provider } from 'react-redux';
-import store, { initAuth, logout, useAppDispatch, useAppSelector } from './store';
+import store, { useAppDispatch, useAppSelector } from './store';
+import { initAuth, logout } from './store/auth/authSlice';
 
 function Calendar() {
 	const auth = useAppSelector(state => state.auth);
