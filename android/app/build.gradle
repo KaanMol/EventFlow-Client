@@ -136,6 +136,9 @@ android {
 
     defaultConfig {
         applicationId "com.calendarapp"
+        manifestPlaceholders = [
+            appAuthRedirectScheme: 'io.identityserver.demo'
+        ]
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

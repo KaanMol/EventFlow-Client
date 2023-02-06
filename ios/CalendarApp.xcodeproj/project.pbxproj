@@ -500,7 +500,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "nl.kaanmol.--PRODUCT-NAME-rfc1034identifier-";
+				PRODUCT_BUNDLE_IDENTIFIER = nl.kaanmol.CalendarApp;
 				PRODUCT_NAME = CalendarApp;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -526,7 +526,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "nl.kaanmol.--PRODUCT-NAME-rfc1034identifier-";
+				PRODUCT_BUNDLE_IDENTIFIER = nl.kaanmol.CalendarApp;
 				PRODUCT_NAME = CalendarApp;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";

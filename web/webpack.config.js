@@ -68,6 +68,9 @@ module.exports = {
       svgLoaderConfiguration,
     ],
   },
+  devServer: {
+    historyApiFallback: true,
+  },
   plugins: [
     new HtmlWebpackPlugin({
       template: path.join(webDirectory, '/index.html'),

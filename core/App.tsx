@@ -1,82 +1,49 @@
 import React from 'react';
-import {SafeAreaView, StatusBar, Text, View, Button} from 'react-native';
+import { Text } from 'react-native';
+import { Index } from './pages/Index';
+import { Login } from './pages/Login';
+import { Route, Router, Routes } from './common/router';
+import { Provider } from 'react-redux';
+import store, { useAppDispatch, useAppSelector } from './store';
+import { initAuth, logout } from './store/auth/authSlice';
 
-import {RecoilRoot} from 'recoil';
-import {Link, Route, Router, Routes} from './Router';
-import {Sources} from './Sources';
+function Calendar() {
+	const auth = useAppSelector(state => state.auth);
+	const dispatch = useAppDispatch();
 
-const Navigation = () => {
-  return (
-    <>
-      <Link to="/">
-        <Text>Home</Text>
-      </Link>
-      <Link to="/sources">
-        <Text>Sources</Text>
-      </Link>
-      <Link to="/test">
-        <Text>Test</Text>
-      </Link>
-    </>
-  );
-};
-
-const Home = () => {
-  return (
-    <>
-      <SafeAreaView>
-        <StatusBar barStyle="dark-content" />
-        <View style={{alignItems: 'center'}}>
-          <Text style={{fontSize: 24}}>React Native Web App Example</Text>
-          <Navigation />
-        </View>
-      </SafeAreaView>
-    </>
-  );
-};
-
-const Test = () => {
-  return (
-    <>
-      <SafeAreaView>
-        <StatusBar barStyle="dark-content" />
-        <View style={{alignItems: 'center'}}>
-          <Text style={{fontSize: 24}}>Test</Text>
-          <Navigation />
-        </View>
-      </SafeAreaView>
-    </>
-  );
-};
-
-const SourcePage = () => {
-  return (
-    <>
-      <SafeAreaView>
-        <StatusBar barStyle="dark-content" />
-        <View style={{alignItems: 'center'}}>
-          <Text style={{fontSize: 24}}>Event sources</Text>
-          <React.Suspense fallback={<Text>Loading...</Text>}>
-            <Sources />
-          </React.Suspense>
-          <Navigation />
-        </View>
-      </SafeAreaView>
-    </>
-  );
-};
+	return (
+		<>
+			{auth.loggedIn ? (
+				<>
+					<Routes>
+						<Route path='/' element={<Index
+							logout={() => dispatch(logout())}
+						/>} />
+					</Routes>
+				</>
+			) : (
+				<>
+					<Routes>
+						<Route path='/' element={<Login />} />
+					</Routes>
+				</>
+			)}
+		</>
+	);
+}
 
 const App = () => {
-  return (
-    <RecoilRoot>
-      <Router>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/test" element={<Test />} />
-          <Route path="/sources" element={<SourcePage />} />
-        </Routes>
-      </Router>
-    </RecoilRoot>
-  );
+	store.dispatch(initAuth());
+
+	return (
+		<Provider store={store}>
+			<Router>
+				<React.Suspense fallback={<Text>Loading...</Text>}>
+					<Calendar />
+				</React.Suspense>
+			</Router>
+		</Provider>
+	);
 };
+
 export default App;
