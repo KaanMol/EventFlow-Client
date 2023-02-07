@@ -6,6 +6,8 @@ import { Route, Router, Routes } from './common/router';
 import { Provider } from 'react-redux';
 import store, { useAppDispatch, useAppSelector } from './store';
 import { initAuth, logout } from './store/auth/authSlice';
+import { Navigation } from './components/Navigation';
+import { Settings } from './pages/Settings';
 
 function Calendar() {
 	const auth = useAppSelector(state => state.auth);
@@ -16,10 +18,12 @@ function Calendar() {
 			{auth.loggedIn ? (
 				<>
 					<Routes>
-						<Route path='/' element={<Index
+						<Route path='/' element={<Index />} />
+						<Route path='/settings' element={<Settings
 							logout={() => dispatch(logout())}
 						/>} />
 					</Routes>
+					<Navigation />
 				</>
 			) : (
 				<>

@@ -1,7 +1,7 @@
 
 import { ActivityIndicator, Button, Text, View } from 'react-native';
 import { FullPageLayout } from '../layout/page/FullPage';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { startAuthFlow } from '../common/auth';
 import { useSearchParams, useNavigate } from '../common/router';
 import { useAppDispatch } from '../store';
@@ -33,6 +33,11 @@ export function Login() {
 		}
 	}, [searchParams, dispatch, navigate])
 
+	const login = useCallback(async () => {
+		setAuthFlowState(true)
+		await startAuthFlow(navigate).catch(() => setAuthFlowState(false))
+	}, [navigate])
+
 
 	return (
 		<FullPageLayout>
@@ -43,10 +48,7 @@ export function Login() {
 						<Text style={{ fontSize: 24 }}>
 							Are you ready to plan your next adventure?
 						</Text>
-						<Button title="Login" onPress={async () => {
-							setAuthFlowState(true)
-							await startAuthFlow(navigate)
-						}} />
+						<Button title="Login" onPress={login} />
 					</>
 				}
 			</View>
