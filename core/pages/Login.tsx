@@ -1,5 +1,5 @@
 
-import { ActivityIndicator, Button, Text, View } from 'react-native';
+import { ActivityIndicator, Button, Text, View, Linking } from 'react-native';
 import { FullPageLayout } from '../layout/page/FullPage';
 import { useCallback, useEffect, useState } from 'react';
 import { startAuthFlow } from '../common/auth';
@@ -17,40 +17,42 @@ function LoggingIn() {
 
 }
 
-export function Login() {
-	const [authFlowState, setAuthFlowState] = useState(false);
-	let [searchParams] = useSearchParams();
-	const navigate = useNavigate();
-	const dispatch = useAppDispatch();
+export function Login({ navigation }) {
+	// const [authFlowState, setAuthFlowState] = useState(false);
+	// let [searchParams] = useSearchParams();
+	// // const navigate = useNavigate();
+	// const dispatch = useAppDispatch();
 
-	useEffect(() => {
-		const code = searchParams.get("code");
-		if (code !== null) {
-			setAuthFlowState(true)
-			dispatch(asyncFetchAccessToken(code)).then(() => {
-				navigate("/");
-			})
-		}
-	}, [searchParams, dispatch, navigate])
+	// useEffect(() => {
+	// 	const code = searchParams.get("code");
+	// 	if (code !== null) {
+	// 		setAuthFlowState(true)
+	// 		dispatch(asyncFetchAccessToken(code)).then(() => {
+	// 			// navigate("/");
+	// 		})
+	// 	}
+	// }, [searchParams, dispatch])
 
 	const login = useCallback(async () => {
-		setAuthFlowState(true)
-		await startAuthFlow(navigate).catch(() => setAuthFlowState(false))
-	}, [navigate])
+		// setAuthFlowState(true)
+		await startAuthFlow(navigation, Linking)
+	}, [navigation])
 
 
 	return (
 		<FullPageLayout>
 			<View style={{ alignItems: 'center' }}>
-				{authFlowState ?
+				{/* {authFlowState ?
 					<LoggingIn /> :
 					<>
 						<Text style={{ fontSize: 24 }}>
 							Are you ready to plan your next adventure?
 						</Text>
-						<Button title="Login" onPress={login} />
+
 					</>
-				}
+				} */}
+				<Text>Login</Text>
+				<Button title="Login" onPress={login} />
 			</View>
 		</FullPageLayout>
 	);
