@@ -10,8 +10,8 @@ import { Navigation } from './components/Navigation';
 import { Settings } from './pages/Settings';
 
 function Calendar() {
-  const auth = useAppSelector(state => state.auth);
-  const dispatch = useAppDispatch();
+	const auth = useAppSelector(state => state.auth);
+	const dispatch = useAppDispatch();
 
 	return (
 		<>
@@ -37,17 +37,17 @@ function Calendar() {
 }
 
 const App = () => {
-  store.dispatch(initAuth());
+	store.dispatch(initAuth());
 
-  return (
-    <Provider store={store}>
-      <Router>
-        <React.Suspense fallback={<Text>Loading...</Text>}>
-          <Calendar />
-        </React.Suspense>
-      </Router>
-    </Provider>
-  );
+	return (
+		<Provider store={store}>
+			<Router>
+				<React.Suspense fallback={<Text>Loading...</Text>}>
+					<Calendar />
+				</React.Suspense>
+			</Router>
+		</Provider>
+	);
 };
 
 export default App;

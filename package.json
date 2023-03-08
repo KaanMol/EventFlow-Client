@@ -22,7 +22,6 @@
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.41.0",
     "react-native": "0.70.6",
-    "react-native-app-auth": "^6.4.3",
     "react-native-encrypted-storage": "^4.0.3",
     "react-native-inappbrowser-reborn": "^3.7.0",
     "react-native-web": "^0.18.10",
