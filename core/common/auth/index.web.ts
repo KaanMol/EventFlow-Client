@@ -1,5 +1,9 @@
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { RootStackParamList } from "../router";
 import { Storage } from "../storage";
 import { generateAuthPrerequisites } from "../token";
+
+
 
 export async function startAuthFlow(navigation, linking) {
 	const { codeVerifier, url } = await generateAuthPrerequisites();
