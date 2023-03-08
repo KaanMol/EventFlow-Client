@@ -1,3 +1,11 @@
+import {ActivityIndicator, Button, Text, View} from 'react-native';
+import {FullPageLayout} from '../layout/page/FullPage';
+import {useCallback, useEffect, useState} from 'react';
+import {startAuthFlow} from '../common/auth';
+import {useSearchParams, useNavigate} from '../common/router';
+import {asyncFetchAccessToken, useAppDispatch} from '../store';
+import {authorize} from 'react-native-app-auth';
+import {authConfig} from '../config/auth';
 
 import { ActivityIndicator, Button, Text, View } from 'react-native';
 import { FullPageLayout } from '../layout/page/FullPage';
@@ -8,13 +16,12 @@ import { useAppDispatch } from '../store';
 import { asyncFetchAccessToken } from '../store/auth/authSlice';
 
 function LoggingIn() {
-	return <>
-		<Text style={{ fontSize: 24 }}>
-			Logging you in, hang on there!
-		</Text>
-		<ActivityIndicator size="large" />
-	</>
-
+  return (
+    <>
+      <Text style={{fontSize: 24}}>Logging you in, hang on there!</Text>
+      <ActivityIndicator size="large" />
+    </>
+  );
 }
 
 export function Login() {
@@ -23,35 +30,45 @@ export function Login() {
 	const navigate = useNavigate();
 	const dispatch = useAppDispatch();
 
-	useEffect(() => {
-		const code = searchParams.get("code");
-		if (code !== null) {
-			setAuthFlowState(true)
-			dispatch(asyncFetchAccessToken(code)).then(() => {
-				navigate("/");
-			})
-		}
-	}, [searchParams, dispatch, navigate])
+  const config = {
+    clientId: authConfig.clientId,
+    redirectUrl: authConfig.redirectUrl,
+    scopes: authConfig.scopes,
+    serviceConfiguration: {
+      authorizationEndpoint: authConfig.authorizationEndpoint,
+      tokenEndpoint: authConfig.tokenEndpoint,
+    },
+  };
 
-	const login = useCallback(async () => {
-		setAuthFlowState(true)
-		await startAuthFlow(navigate).catch(() => setAuthFlowState(false))
-	}, [navigate])
+  const authCb = useCallback(async () => {
+    const result = await authorize(config);
+    console.log(result);
+  }, []);
 
+  //   useEffect(() => {
+  //     const code = searchParams.get('code');
+  //     if (code !== null) {
+  //       setLoggingIn(true);
+  //       dispatch(asyncFetchAccessToken(code)).then(() => {
+  //         navigate('/');
+  //       });
+  //     }
+  //   }, [searchParams]);
 
-	return (
-		<FullPageLayout>
-			<View style={{ alignItems: 'center' }}>
-				{authFlowState ?
-					<LoggingIn /> :
-					<>
-						<Text style={{ fontSize: 24 }}>
-							Are you ready to plan your next adventure?
-						</Text>
-						<Button title="Login" onPress={login} />
-					</>
-				}
-			</View>
-		</FullPageLayout>
-	);
+  return (
+    <FullPageLayout>
+      <View style={{alignItems: 'center'}}>
+        {loggingIn === true ? (
+          <LoggingIn />
+        ) : (
+          <>
+            <Text style={{fontSize: 24}}>
+              Are you ready to plan your next adventure?
+            </Text>
+            <Button title="Login" onPress={authCb} />
+          </>
+        )}
+      </View>
+    </FullPageLayout>
+  );
 }
