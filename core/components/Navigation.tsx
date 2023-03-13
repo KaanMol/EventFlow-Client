@@ -10,6 +10,9 @@ export function Navigation() {
 			<Link to="/settings">
 				<Text>Settings</Text>
 			</Link>
+			<Link to="/import">
+				<Text>Import</Text>
+			</Link>
 		</>
 	);
-};
+}

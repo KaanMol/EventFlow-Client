@@ -1,13 +1,14 @@
-import React from 'react';
-import { Text } from 'react-native';
-import { Index } from './pages/Index';
-import { Login } from './pages/Login';
-import { Route, Router, Routes } from './common/router';
-import { Provider } from 'react-redux';
-import store, { useAppDispatch, useAppSelector } from './store';
-import { initAuth, logout } from './store/auth/authSlice';
-import { Navigation } from './components/Navigation';
-import { Settings } from './pages/Settings';
+import React from "react";
+import { Text } from "react-native";
+import { Index } from "./pages/Index";
+import { Login } from "./pages/Login";
+import { Route, Router, Routes } from "./common/router";
+import { Provider } from "react-redux";
+import store, { useAppDispatch, useAppSelector } from "./store";
+import { initAuth, logout } from "./store/auth/authSlice";
+import { Navigation } from "./components/Navigation";
+import { Settings } from "./pages/Settings";
+import { Import } from "./pages/Import";
 
 function Calendar() {
 	const auth = useAppSelector(state => state.auth);
@@ -18,17 +19,19 @@ function Calendar() {
 			{auth.loggedIn ? (
 				<>
 					<Routes>
-						<Route path='/' element={<Index />} />
-						<Route path='/settings' element={<Settings
-							logout={() => dispatch(logout())}
-						/>} />
+						<Route path="/" element={<Index />} />
+						<Route
+							path="/settings"
+							element={<Settings logout={() => dispatch(logout())} />}
+						/>
+						<Route path="/import" element={<Import />} />
 					</Routes>
 					<Navigation />
 				</>
 			) : (
 				<>
 					<Routes>
-						<Route path='/' element={<Login />} />
+						<Route path="/" element={<Login />} />
 					</Routes>
 				</>
 			)}
