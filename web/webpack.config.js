@@ -37,7 +37,7 @@ const babelLoaderConfiguration = {
   ],
 };
 const imageLoaderConfiguration = {
-  test: /\\\\.(gif|jpe?g|png)$/,
+  test: /\.(png|jpe?g|gif)$/i,
   use: {
     loader: 'url-loader',
     options: {

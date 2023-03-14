@@ -1,7 +1,7 @@
 import axios from "axios";
 import { Storage } from "./storage";
 
-const request = axios.create({
+export const request = axios.create({
 	baseURL: 'http://localhost:3000',
 });
 

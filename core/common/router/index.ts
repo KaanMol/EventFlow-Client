@@ -1,2 +1,7 @@
-export { NativeRouter as Router } from 'react-router-native';
-export * from 'react-router-native';
+export type RootStackParamList = {
+	Dashboard: undefined;
+	Details: undefined;
+	Auth: undefined;
+	Login: undefined;
+	Settings: undefined;
+};

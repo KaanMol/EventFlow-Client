@@ -1,18 +1,16 @@
 import { Linking } from 'react-native';
 import InAppBrowser from 'react-native-inappbrowser-reborn';
-import { NavigateFunction } from 'react-router-dom';
 import auth from '../../config/auth';
 import { generateAuthPrerequisites } from '../token';
 
-export async function startAuthFlow(navigate: NavigateFunction) {
+export async function startAuthFlow(navigation, linking) {
 	const { url } = await generateAuthPrerequisites();
 	const result = await startInAppBrowser(url);
 	const code = (result as any).url.substring(21, 53);
 
-	navigate({
-		pathname: '/',
-		search: `?code=${code}`
-	});
+	navigation.navigate(`Auth`, {
+		code: code
+	})
 };
 
 async function startInAppBrowser(url: string) {
