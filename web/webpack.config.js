@@ -7,6 +7,7 @@ console.log(rootDirectory)
 const webDirectory = path.resolve(__dirname);
 const {presets, plugins} = require(`${rootDirectory}/babel.config.js`);
 const compileNodeModules = [
+	"react-native-animatable"
   // Add every react-native package that needs compiling
   // 'react-native-gesture-handler',
 ].map((moduleName) => path.resolve(rootDirectory, `node_modules/${moduleName}`));
@@ -28,7 +29,9 @@ const babelLoaderConfiguration = {
       plugins,
     },
   },
-};const svgLoaderConfiguration = {
+};
+
+const svgLoaderConfiguration = {
   test: /\\\\.svg$/,
   use: [
     {
@@ -66,6 +69,12 @@ module.exports = {
       babelLoaderConfiguration,
       imageLoaderConfiguration,
       svgLoaderConfiguration,
+	  {
+		test: /(@?react-(navigation|native)).*\.(ts|js)x?$/,
+		include: /node_modules/,
+		exclude: [/react-native-web/, /\.(native|ios|android)\.(ts|js)x?$/],
+		loader: 'babel-loader'
+	  },
     ],
   },
   devServer: {
