@@ -7,7 +7,7 @@ export const request = axios.create({
 
 // Inject access token in every api request
 request.interceptors.request.use(async (config) => {
-	const accessToken = await Storage.getItem("access_token")
+	const accessToken = await Storage.getItem("auth.access_token")
 
 	if (accessToken) {
 		config.headers = config.headers || {};
